@@ -1,0 +1,76 @@
+plugins {
+	id 'fabric-loom' version '1.9-SNAPSHOT'
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+loom {
+	accessWidenerPath = file("src/main/resources/kyrptconfig.accesswidener")
+}
+
+repositories {
+	maven { url 'https://maven.fabricmc.net' }
+	maven { url "https://maven.terraformersmc.com/releases"}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation  "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation  "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	modImplementation ("com.terraformersmc:modmenu:13.0.0") { exclude group: "net.fabricmc.fabric-api" }
+
+	testImplementation 'junit:junit:4.13.1';
+	compileOnly group: "com.google.code.findbugs", name: "jsr305", version: "3.0.2";
+	//modApi "blue.endless:jankson:+"
+	//include "blue.endless:jankson:+"
+}
+
+base {
+	archivesName = project.archives_base_name
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${base.archivesName.get()}"}
+	}
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = project.archives_base_name
+			from components.java
+		}
+	}
+	repositories {
+		maven {
+			url ='s3://maven.kyrptonaught.dev'
+			credentials(AwsCredentials) {
+				accessKey = System.getenv('maven-key-id')
+				secretKey = System.getenv('maven-key')
+			}
+		}
+	}
+}

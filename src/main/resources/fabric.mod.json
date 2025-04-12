@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "kyrptconfig",
+  "version": "1.6.1-1.21.1",
+  "name": "Kyrpt Config",
+  "description": "Config library used in my mods",
+  "authors": [
+    "kyrptonaught"
+  ],
+  "contact": {
+    "homepage": "https://github.com/kyrptonaught/kyrptconfig",
+    "sources": "https://github.com/kyrptonaught/kyrptconfig"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "icon": "assets/kyrptconfig/icon.png",
+  "mixins": [
+    {
+      "config": "net.kyrptonaught.kyrptconfig.json",
+      "environment": "client"
+    }
+  ],
+  "accessWidener": "kyrptconfig.accesswidener",
+  "entrypoints": {
+    "client": [
+      "net.kyrptonaught.kyrptconfig.KyrptConfigClientInit"
+    ],
+    "modmenu": [
+      "net.kyrptonaught.kyrptconfig.example.ExampleConfig"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "fabric": "*",
+    "java": ">=21"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ]
+    }
+  }
+}
